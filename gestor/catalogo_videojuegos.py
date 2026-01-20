@@ -124,7 +124,7 @@ def obtener_estadisticas(catalogo):
 def escribir_csv(catalogo, nombre_fichero):
     """Guarda en un fichero el catalogo"""    
     try:
-        with open(f"./catalogo_videojuegos/fichero_csv/{nombre_fichero}.csv", "w") as fichero_csv:
+        with open(f"./fichero_csv/{nombre_fichero}.csv", "w") as fichero_csv:
             writer = csv.DictWriter(fichero_csv, fieldnames=["titulo", "anio", "generos"], delimiter=";")
             writer.writeheader()
             writer.writerows(catalogo)
@@ -138,7 +138,7 @@ def leer_csv(nombre_fichero):
     """Leer un catalogo guardado en un fichero CSV"""  
     catalogo = crear_catalogo()  
     try:
-        with open(f"./catalogo_videojuegos/fichero_csv/{nombre_fichero}.csv") as fichero_csv:
+        with open(f"./fichero_csv/{nombre_fichero}.csv") as fichero_csv:
             reader = csv.DictReader(fichero_csv, delimiter=';')
             for fila in reader:
                 lista_generos = fila['generos'].strip('{}').replace("'", "").split(',')
