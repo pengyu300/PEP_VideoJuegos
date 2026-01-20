@@ -17,7 +17,6 @@ from fichero_json import almacenar as json_alm
 from fichero_json import leer as json_leer
 
 
-
 def mostrar_videojuego(juego):
     """Muestra por pantalla la información de un videojuego.
 
@@ -63,10 +62,13 @@ def mostrar_menu():
     print("7. Buscar por género")
     print("8. Buscar por rango de años")
     print("9. Mostrar estadísticas")
-    print('10. Guardar catalogo en un fichero CSV')
-    print('11. Leer un catalogo de un fichero CSV')
-    print('12. Guardar catalogo en un fichero JSON')
-    print('11. Leer un catalogo de un fichero JSON')
+
+    #añadir opciones de los ficheros 
+    print("10. Guardar catalogo en CSV")
+    print("11. Cargar catalogo desde CSV")
+    print("12. Guardar catalogo en JSON")
+    print("13. Cargar catalogo desde JSON")
+
     print("0. Salir")
     print("===================================")
 
@@ -77,7 +79,7 @@ def menu_principal():
     Aquí se crea el catálogo en memoria y se llama a las funciones
     del gestor unificado según la opción elegida.
     """
-    videjuegos = catalogo_videojuegos.crear_catalogo()
+    videojuegos = catalogo_videojuegos.crear_catalogo()
 
     while True:
         mostrar_menu()
@@ -181,7 +183,7 @@ def menu_principal():
                 anio_max = int(anio_max_texto)
 
                 resultados = catalogo_videojuegos.buscar_juegos_por_rango(
-                    videjuegos, anio_min, anio_max
+                    videojuegos, anio_min, anio_max
                 )
                 if not resultados:
                     print("\nNo se encontraron videojuegos en ese rango de años.\n")
@@ -221,7 +223,7 @@ def menu_principal():
                     print()
                     for juego in videojuegos_lista:
                         mostrar_videojuego(juego)
-
+            
             elif opcion == "12":
                 nombre = input("Nombre del archivo JSON para guardad : ")
                 json_alm.almacenar_json(videojuegos,nombre)
@@ -231,6 +233,13 @@ def menu_principal():
                 if nuevo_cat is not None:
                     videojuegos = nuevo_cat
 
+            elif opcion == "0":
+                # Salir del programa
+                print("\nSaliendo del programa... Hasta pronto.\n")
+                break
+            else:
+                print("\nOpción no válida. Intenta de nuevo.\n")
+                
         # Errores habituales: conversión de texto a entero, etc.
         except ValueError as error:
             print("Error de datos:", error)
