@@ -4,6 +4,9 @@ Módulo unificado para la gestión del catálogo de videojuegos.
 Incluye tanto la lógica de negocio como el acceso a datos.
 """
 
+from os import strerror
+import csv
+
 from .utilidades import normalizar_titulo, normalizar_generos
 
 
@@ -116,4 +119,35 @@ def obtener_estadisticas(catalogo):
         for genero in juego["generos"]:
             conteo[genero] = conteo.get(genero, 0) + 1
     return {"total": total, "generos": conteo}
+
+
+def escribir_csv(catalogo, nombre_fichero):
+    """Guarda en un fichero el catalogo"""    
+    try:
+        with open(f"./catalogo_videojuegos/fichero_csv/{nombre_fichero}.csv", "w") as fichero_csv:
+            writer = csv.DictWriter(fichero_csv, fieldnames=["titulo", "anio", "generos"], delimiter=";")
+            writer.writeheader()
+            writer.writerows(catalogo)
+            print(f"Archivo '{nombre_fichero}.csv' generado correctamente.")
+    except IOError as e:
+        print("Error durante la operación de archivos:", strerror(e.errno))
+        exit(e.errno)
+
+
+def leer_csv(nombre_fichero):
+    """Leer un catalogo guardado en un fichero CSV"""  
+    catalogo = crear_catalogo()  
+    try:
+        with open(f"./catalogo_videojuegos/fichero_csv/{nombre_fichero}.csv") as fichero_csv:
+            reader = csv.DictReader(fichero_csv, delimiter=';')
+            for fila in reader:
+                lista_generos = fila['generos'].strip('{}').replace("'", "").split(',')
+                lista_generos.append("")
+                crear_juego(catalogo, fila['titulo'], int(fila['anio']), lista_generos)
+            return catalogo
+    except IOError as e:
+        print("Error durante la operación de archivos:", strerror(e.errno))
+        exit(e.errno)
+
+
 

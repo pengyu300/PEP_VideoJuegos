@@ -61,6 +61,8 @@ def mostrar_menu():
     print("7. Buscar por género")
     print("8. Buscar por rango de años")
     print("9. Mostrar estadísticas")
+    print('10. Guardar catalogo en un fichero CSV')
+    print('11. Leer un catalogo de un fichero CSV')
     print("0. Salir")
     print("===================================")
 
@@ -193,6 +195,29 @@ def menu_principal():
                 else:
                     for genero, cantidad in sorted(est["generos"].items()):
                         print("  -", genero, ":", cantidad)
+
+            elif opcion == "10":
+                # Guardar en un fichero CSV
+                videojuegos_lista = catalogo_videojuegos.listar_juegos(videjuegos)
+                if not videojuegos_lista:
+                    print("\nNo hay videojuegos en el catálogo.\n")
+                else:
+                    nombre_fichero = input("Nombre del fichero: ")
+                    catalogo_videojuegos.escribir_csv(videojuegos_lista, nombre_fichero)
+
+            elif opcion == "11":
+                # Leer catalogo de un fichero CSV
+                nombre_fichero = input("Nombre del fichero: ")
+                catalogo_fichero = catalogo_videojuegos.leer_csv(nombre_fichero)
+
+                videojuegos_lista = catalogo_videojuegos.listar_juegos(catalogo_fichero)
+                if not videojuegos_lista:
+                    print("\nNo hay videojuegos en el catálogo.\n")
+                else:
+                    print()
+                    for juego in videojuegos_lista:
+                        mostrar_videojuego(juego)
+                    
             elif opcion == "0":
                 # Salir del programa
                 print("\nSaliendo del programa... Hasta pronto.\n")
