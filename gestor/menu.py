@@ -13,6 +13,8 @@ llamamos a las funciones de catalogo_videojuegos.py.
 
 import os
 from . import catalogo_videojuegos
+from fichero_json import almacenar as json_alm
+from fichero_json import leer as json_leer
 
 
 
@@ -63,6 +65,8 @@ def mostrar_menu():
     print("9. Mostrar estadísticas")
     print('10. Guardar catalogo en un fichero CSV')
     print('11. Leer un catalogo de un fichero CSV')
+    print('12. Guardar catalogo en un fichero JSON')
+    print('11. Leer un catalogo de un fichero JSON')
     print("0. Salir")
     print("===================================")
 
@@ -83,7 +87,7 @@ def menu_principal():
         try:
             if opcion == "1":
                 # Listar todos los videojuegos
-                videojuegos_lista = catalogo_videojuegos.listar_juegos(videjuegos)
+                videojuegos_lista = catalogo_videojuegos.listar_juegos(videojuegos)
                 if not videojuegos_lista:
                     print("\nNo hay videojuegos en el catálogo.\n")
                 else:
@@ -94,14 +98,14 @@ def menu_principal():
             elif opcion == "2":
                 # Añadir nuevo videojuego
                 titulo, anio, generos = pedir_datos_videojuego()
-                juego = catalogo_videojuegos.crear_juego(videjuegos, titulo, anio, generos)
+                juego = catalogo_videojuegos.crear_juego(videojuegos, titulo, anio, generos)
                 print("\nVideojuego añadido correctamente.\n")
                 mostrar_videojuego(juego)
 
             elif opcion == "3":
                 # Consultar por título
                 titulo = input("Título a buscar: ")
-                juego = catalogo_videojuegos.obtener_juego(videjuegos, titulo)
+                juego = catalogo_videojuegos.obtener_juego(videojuegos, titulo)
                 if juego is None:
                     print("\nNo se encontró el videojuego.\n")
                 else:
@@ -131,7 +135,7 @@ def menu_principal():
                     nuevos_generos = None
 
                 juego = catalogo_videojuegos.actualizar_juego(
-                    videjuegos,
+                    videojuegos,
                     titulo_original,
                     nuevo_titulo,
                     nuevo_anio,
@@ -143,7 +147,7 @@ def menu_principal():
             elif opcion == "5":
                 # Eliminar videojuego
                 titulo = input("Título del videojuego a eliminar: ")
-                borrado = catalogo_videojuegos.eliminar_juego(videjuegos, titulo)
+                borrado = catalogo_videojuegos.eliminar_juego(videojuegos, titulo)
                 if borrado:
                     print("\nVideojuego eliminado.\n")
                 else:
@@ -152,7 +156,7 @@ def menu_principal():
             elif opcion == "6":
                 # Búsqueda parcial por título
                 fragmento = input("Fragmento del título: ")
-                resultados = catalogo_videojuegos.buscar_juegos_parcial(videjuegos, fragmento)
+                resultados = catalogo_videojuegos.buscar_juegos_parcial(videojuegos, fragmento)
                 if not resultados:
                     print("\nNo se encontraron videojuegos que coincidan.\n")
                 else:
@@ -162,7 +166,7 @@ def menu_principal():
             elif opcion == "7":
                 # Búsqueda por género
                 genero = input("Género a buscar: ")
-                resultados = catalogo_videojuegos.buscar_juegos_por_genero(videjuegos, genero)
+                resultados = catalogo_videojuegos.buscar_juegos_por_genero(videojuegos, genero)
                 if not resultados:
                     print("\nNo se encontraron videojuegos de ese género.\n")
                 else:
@@ -187,7 +191,7 @@ def menu_principal():
 
             elif opcion == "9":
                 # Mostrar estadísticas
-                est = catalogo_videojuegos.obtener_estadisticas(videjuegos)
+                est = catalogo_videojuegos.obtener_estadisticas(videojuegos)
                 print("Número total de videojuegos:", est["total"])
                 print("Conteo por género:")
                 if not est["generos"]:
@@ -198,7 +202,7 @@ def menu_principal():
 
             elif opcion == "10":
                 # Guardar en un fichero CSV
-                videojuegos_lista = catalogo_videojuegos.listar_juegos(videjuegos)
+                videojuegos_lista = catalogo_videojuegos.listar_juegos(videojuegos)
                 if not videojuegos_lista:
                     print("\nNo hay videojuegos en el catálogo.\n")
                 else:
@@ -217,14 +221,15 @@ def menu_principal():
                     print()
                     for juego in videojuegos_lista:
                         mostrar_videojuego(juego)
-                    
-            elif opcion == "0":
-                # Salir del programa
-                print("\nSaliendo del programa... Hasta pronto.\n")
-                break
 
-            else:
-                print("\nOpción no válida. Intenta de nuevo.\n")
+            elif opcion == "12":
+                nombre = input("Nombre del archivo JSON para guardad : ")
+                json_alm.almacenar_json(videojuegos,nombre)
+            elif opcion == "13":
+                nombre = input("Nombre del archivo JSON para cargar : ")
+                nuevo_cat = json_leer.cargar_json(nombre)
+                if nuevo_cat is not None:
+                    videojuegos = nuevo_cat
 
         # Errores habituales: conversión de texto a entero, etc.
         except ValueError as error:
